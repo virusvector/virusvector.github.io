@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>virus3 | For the Horde</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;700&family=Inter:wght@400;700&family=MedievalSharp&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --horde-red: #8b0000;
+            --horde-crimson: #c1121f;
+            --horde-gold: #d4af37;
+            --horde-black: #0a0a0a;
+            --glass-bg: rgba(10, 10, 10, 0.75);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--horde-black);
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+
+        #embers {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background-image: url('../assets/horde-bg.webp'), url('../assets/horde-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.4);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            background: radial-gradient(circle, transparent 0%, rgba(0,0,0,0.8) 100%);
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            width: 90%;
+            max-width: 500px;
+            padding: 40px;
+            text-align: center;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+
+        .avatar-container {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 30px;
+        }
+
+        .avatar-frame {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border: 3px solid var(--horde-gold);
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--horde-red);
+            transition: all 0.5s ease;
+        }
+
+        .avatar-container:hover .avatar-frame {
+            box-shadow: 0 0 30px var(--horde-crimson), inset 0 0 15px var(--horde-gold);
+            transform: scale(1.05);
+        }
+
+        .avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--horde-black);
+            position: relative;
+            z-index: 2;
+        }
+
+        h1 {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 2.5rem;
+            color: var(--horde-gold);
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .handle {
+            font-family: 'MedievalSharp', cursive;
+            color: var(--horde-crimson);
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .tagline {
+            font-style: italic;
+            margin-bottom: 30px;
+            color: #bbb;
+            font-size: 1rem;
+        }
+
+        .social-links {
+            display: grid;
+            gap: 15px;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 20px;
+            text-decoration: none;
+            color: #fff;
+            background: rgba(139, 0, 0, 0.2);
+            border: 1px solid var(--horde-red);
+            border-radius: 8px;
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover, .btn:focus {
+            background: var(--horde-red);
+            box-shadow: 0 0 15px var(--horde-crimson);
+            outline: none;
+            border-color: var(--horde-gold);
+        }
+
+        .btn:focus-visible {
+            outline: 2px solid var(--horde-gold);
+            outline-offset: 4px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .avatar-frame, .btn {
+                transition: none;
+            }
+            .avatar-container:hover .avatar-frame {
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background"></div>
+    <canvas id="embers"></canvas>
+    <div class="overlay"></div>
+
+    <main class="container">
+        <div class="avatar-container">
+            <div class="avatar-frame"></div>
+            <picture>
+                <source srcset="../assets/avatar.webp" type="image/webp">
+                <img src="../assets/avatar.png" alt="virus3 WoW Avatar" class="avatar">
+            </picture>
+        </div>
+
+        <h1>virus3</h1>
+        <span class="handle">@virusvector</span>
+
+        <p class="tagline">"Strength and Honor. For the Horde!"</p>
+
+        <div class="social-links">
+            <a href="https://social.vivaldi.net/@virus3" class="btn" target="_blank" rel="me noopener noreferrer">Mastodon</a>
+            <a href="mailto:virus3@atomicmail.io" class="btn">Email</a>
+            <a href="https://github.com/virusvector" class="btn" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="https://x.com/virusvector" class="btn" target="_blank" rel="noopener noreferrer">X / Twitter</a>
+        </div>
+    </main>
+
+    <script>
+        const canvas = document.getElementById('embers');
+        const ctx = canvas.getContext('2d');
+        let width, height, particles = [];
+        const particleCount = 40;
+        let animationId;
+
+        class Particle {
+            constructor() {
+                this.init();
+            }
+
+            init() {
+                this.x = Math.random() * width;
+                this.y = height + Math.random() * 100;
+                this.size = Math.random() * 3 + 1;
+                this.speedY = Math.random() * 0.5 + 0.2;
+                this.speedX = Math.random() * 0.4 - 0.2;
+                this.opacity = Math.random() * 0.5 + 0.3;
+                this.hue = Math.random() * 20 + 10; // Orange-red tones
+            }
+
+            update() {
+                this.y -= this.speedY;
+                this.x += this.speedX;
+                this.opacity -= 0.001;
+
+                if (this.y < -10 || this.opacity <= 0) {
+                    this.init();
+                }
+            }
+
+            draw() {
+                ctx.fillStyle = `hsla(${this.hue}, 100%, 50%, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Add glow
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = `hsl(${this.hue}, 100%, 50%)`;
+            }
+        }
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            particles = [];
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            ctx.shadowBlur = 0; // Reset shadow for clearRect
+
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            animationId = requestAnimationFrame(animate);
+        }
+
+        // Reduced motion check
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+        function handleMotionPreference() {
+            if (prefersReducedMotion.matches) {
+                cancelAnimationFrame(animationId);
+                ctx.clearRect(0, 0, width, height);
+            } else {
+                animate();
+            }
+        }
+
+        window.addEventListener('resize', resize);
+        prefersReducedMotion.addEventListener('change', handleMotionPreference);
+
+        // Visibility API to pause when tab is hidden
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                cancelAnimationFrame(animationId);
+            } else if (!prefersReducedMotion.matches) {
+                animate();
+            }
+        });
+
+        resize();
+        if (!prefersReducedMotion.matches) {
+            animate();
+        }
+    </script>
+</body>
+</html>
